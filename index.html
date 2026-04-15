@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScaleForge — E-Commerce Growth Partners</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --bg:         #080809;
+      --bg-1:       #0f0f11;
+      --bg-2:       #141417;
+      --bg-card:    #16161a;
+      --border:     rgba(255,255,255,0.07);
+      --border-hi:  rgba(255,255,255,0.13);
+
+      --orange:     #ff5c1a;
+      --orange-dim: rgba(255,92,26,0.12);
+      --orange-glow:rgba(255,92,26,0.35);
+
+      --white:      #f5f4f0;
+      --muted:      #7a7a85;
+      --muted-2:    #4a4a55;
+
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --radius:  12px;
+      --radius-lg: 20px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ============================================================
+       TYPOGRAPHY SCALE
+    ============================================================ */
+    h1, h2, h3, h4, h5 { font-family: var(--font-display); line-height: 1.15; }
+    h1 { font-size: clamp(2.6rem, 6vw, 5rem); font-weight: 800; letter-spacing: -0.03em; }
+    h2 { font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.02em; }
+    h3 { font-size: 1.25rem; font-weight: 700; }
+    p  { color: var(--muted); line-height: 1.75; }
+    a  { color: inherit; text-decoration: none; }
+
+    /* ============================================================
+       LAYOUT UTILITIES
+    ============================================================ */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .section    { padding: 110px 0; position: relative; z-index: 1; }
+    .section-sm { padding: 70px 0; position: relative; z-index: 1; }
+
+    .label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--orange);
+      background: var(--orange-dim);
+      border: 1px solid rgba(255,92,26,0.25);
+      padding: 5px 14px; border-radius: 999px;
+      margin-bottom: 22px;
+    }
+    .label::before { content: ''; width: 6px; height: 6px; background: var(--orange); border-radius: 50%; display: block; }
+
+    .section-header { max-width: 680px; margin-bottom: 60px; }
+    .section-header p { font-size: 1.05rem; margin-top: 14px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-family: var(--font-display); font-weight: 600;
+      font-size: 0.9rem; letter-spacing: 0.01em;
+      padding: 14px 28px; border-radius: 8px;
+      border: none; cursor: pointer;
+      transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .btn-primary {
+      background: var(--orange); color: #fff;
+      box-shadow: 0 0 32px var(--orange-glow);
+    }
+    .btn-primary:hover {
+      background: #ff7040;
+      box-shadow: 0 0 48px var(--orange-glow);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      background: transparent; color: var(--white);
+      border: 1px solid var(--border-hi);
+    }
+    .btn-ghost:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+      transform: translateY(-2px);
+    }
+    .btn-lg { padding: 18px 38px; font-size: 1rem; border-radius: 10px; }
+
+    .btn svg { transition: transform 0.25s; }
+    .btn:hover svg { transform: translateX(4px); }
+
+    /* ============================================================
+       NAVBAR
+    ============================================================ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 0;
+      transition: background 0.4s, border-color 0.4s, padding 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(8, 8, 9, 0.88);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--font-display); font-weight: 800; font-size: 1.4rem;
+      letter-spacing: -0.03em;
+    }
+    .nav-logo span { color: var(--orange); }
+    .nav-links {
+      display: flex; gap: 36px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.88rem; font-weight: 500; color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta { display: flex; gap: 12px; align-items: center; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; transition: var(--transition); }
+
+    /* Mobile nav */
+    .mobile-nav {
+      display: none;
+      position: fixed; inset: 0; z-index: 99;
+      background: rgba(8,8,9,0.98);
+      backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--white); }
+    .mobile-nav a:hover { color: var(--orange); }
+    .close-mobile { position: absolute; top: 22px; right: 24px; font-size: 1.6rem; cursor: pointer; color: var(--muted); }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding-top: 80px;
+      position: relative; overflow: hidden;
+    }
+    /* Radial glow behind headline */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -20%; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 600px;
+      background: radial-gradient(ellipse at center,
+        rgba(255,92,26,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    /* Grid pattern */
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      display: grid; grid-template-columns: 1fr 0.85fr; gap: 60px; align-items: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 28px; height: 1px; background: var(--orange);
+    }
+    .hero-headline { margin-bottom: 22px; }
+    .hero-headline em {
+      font-style: normal; color: var(--orange);
+      position: relative;
+    }
+    .hero-headline em::after {
+      content: '';
+      position: absolute; bottom: 4px; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--orange), transparent);
+      border-radius: 2px;
+    }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--muted); max-width: 480px; margin-bottom: 38px; line-height: 1.8;
+    }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 52px; }
+    .hero-trust {
+      display: flex; gap: 28px; align-items: center;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+    }
+    .hero-trust-item { display: flex; align-items: center; gap: 9px; }
+    .hero-trust-icon { color: var(--orange); font-size: 1.1rem; }
+    .hero-trust-item span { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+
+    /* Hero right panel — floating card */
+    .hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hi);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    }
+    .hero-card::before {
+      content: '';
+      position: absolute; top: -1px; left: 32px; right: 32px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--orange), transparent);
+    }
+    .hc-header {
+      font-family: var(--font-display); font-size: 0.8rem;
+      font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 24px;
+    }
+    .hc-metric { margin-bottom: 18px; }
+    .hc-metric-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
+    .hc-bar-wrap {
+      background: var(--bg-2); border-radius: 4px; height: 8px; overflow: hidden;
+    }
+    .hc-bar {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, var(--orange), #ff9555);
+      animation: barGrow 1.6s cubic-bezier(0.4,0,0.2,1) both;
+    }
+    @keyframes barGrow { from { width: 0 !important; } }
+    .hc-metric-val {
+      font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
+      color: var(--white); margin-top: 6px;
+    }
+    .hc-divider { height: 1px; background: var(--border); margin: 22px 0; }
+    .hc-big {
+      display: flex; align-items: flex-end; gap: 8px;
+    }
+    .hc-big-num {
+      font-family: var(--font-display); font-size: 2.6rem; font-weight: 800;
+      color: var(--orange); line-height: 1;
+    }
+    .hc-big-label { font-size: 0.82rem; color: var(--muted); padding-bottom: 6px; }
+    .hc-tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 600;
+      background: rgba(34,197,94,0.15); color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.25);
+      padding: 3px 10px; border-radius: 999px; margin-top: 8px;
+    }
+
+    /* ============================================================
+       MARQUEE / LOGOS
+    ============================================================ */
+    .marquee-section {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 22px 0; overflow: hidden;
+      position: relative; z-index: 1;
+    }
+    .marquee-track {
+      display: flex; gap: 48px;
+      animation: marquee 24s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      font-family: var(--font-display); font-size: 0.8rem;
+      font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted-2);
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .marquee-item span { color: var(--orange); font-size: 1rem; }
+
+    /* ============================================================
+       TRUST / PROOF SECTION
+    ============================================================ */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .proof-item {
+      padding: 44px 32px;
+      background: var(--bg-card);
+      transition: background var(--transition);
+      position: relative;
+    }
+    .proof-item:hover { background: var(--bg-2); }
+    .proof-item + .proof-item {
+      border-left: 1px solid var(--border);
+    }
+    .proof-num {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; color: var(--white);
+      line-height: 1;
+    }
+    .proof-num sup { font-size: 0.55em; color: var(--orange); vertical-align: top; margin-top: 4px; }
+    .proof-suffix { color: var(--orange); }
+    .proof-label { font-size: 0.85rem; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+    .proof-bar {
+      position: absolute; bottom: 0; left: 0;
+      height: 3px; background: linear-gradient(90deg, var(--orange), transparent);
+      width: 0; transition: width 1s ease;
+    }
+    .proof-item:hover .proof-bar { width: 100%; }
+
+    /* ============================================================
+       SERVICES
+    ============================================================ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      transition: all var(--transition);
+      position: relative; overflow: hidden; cursor: default;
+    }
+    .service-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--orange-dim) 0%, transparent 60%);
+      opacity: 0; transition: opacity var(--transition);
+    }
+    .service-card:hover {
+      border-color: rgba(255,92,26,0.35);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .service-card:hover::after { opacity: 1; }
+    .service-icon {
+      width: 46px; height: 46px;
+      background: var(--orange-dim);
+      border: 1px solid rgba(255,92,26,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 20px;
+      position: relative; z-index: 1;
+    }
+    .service-card h3 { font-size: 1.05rem; margin-bottom: 10px; position: relative; z-index: 1; }
+    .service-card p  { font-size: 0.88rem; line-height: 1.7; position: relative; z-index: 1; }
+    .service-tag {
+      display: inline-block; margin-top: 16px;
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--orange); letter-spacing: 0.05em;
+      position: relative; z-index: 1;
+    }
+
+    /* ============================================================
+       PROCESS
+    ============================================================ */
+    #process { background: var(--bg-1); }
+    .process-steps {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute; top: 36px; left: 12.5%; right: 12.5%;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent, var(--orange), var(--orange), var(--orange), transparent);
+      opacity: 0.3;
+    }
+    .process-step {
+      padding: 0 24px 0 0; text-align: left;
+      position: relative;
+    }
+    .step-num {
+      width: 72px; height: 72px;
+      background: var(--bg);
+      border: 1px solid var(--border-hi);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;
+      color: var(--orange); margin-bottom: 28px;
+      position: relative; z-index: 1;
+      transition: all var(--transition);
+    }
+    .process-step:hover .step-num {
+      background: var(--orange);
+      color: #fff;
+      box-shadow: 0 0 28px var(--orange-glow);
+    }
+    .step-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .step-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; }
+
+    /* ============================================================
+       WHY US
+    ============================================================ */
+    .why-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px 80px;
+      align-items: start;
+    }
+    .why-left h2 { margin-bottom: 20px; }
+    .why-left p  { font-size: 1rem; margin-bottom: 28px; }
+    .why-left .btn { margin-top: 10px; }
+
+    .why-right { display: flex; flex-direction: column; gap: 24px; }
+    .why-item {
+      display: flex; gap: 18px; align-items: flex-start;
+      padding: 22px; border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      transition: all var(--transition);
+    }
+    .why-item:hover {
+      border-color: rgba(255,92,26,0.3);
+      background: var(--bg-2);
+    }
+    .why-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      border-radius: 10px;
+      background: var(--orange-dim);
+      border: 1px solid rgba(255,92,26,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .why-text h4 { font-size: 0.95rem; margin-bottom: 5px; }
+    .why-text p  { font-size: 0.85rem; }
+
+    /* ============================================================
+       CASE STUDIES
+    ============================================================ */
+    #cases { background: var(--bg-1); }
+    .cases-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .case-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .case-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+    }
+    .case-header {
+      padding: 28px 32px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .case-brand { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+    .case-cat {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin-top: 4px;
+    }
+    .case-badge {
+      font-size: 0.72rem; font-weight: 600;
+      background: var(--orange-dim); color: var(--orange);
+      border: 1px solid rgba(255,92,26,0.25);
+      padding: 5px 12px; border-radius: 999px;
+    }
+    .case-body { padding: 28px 32px; }
+    .case-challenge {
+      font-size: 0.88rem; color: var(--muted); line-height: 1.75; margin-bottom: 24px;
+    }
+    .before-after {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;
+    }
+    .ba-block {
+      background: var(--bg-2); border-radius: 10px; padding: 18px;
+      border: 1px solid var(--border);
+    }
+    .ba-block.after { border-color: rgba(255,92,26,0.25); }
+    .ba-title {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
+    }
+    .ba-title.after-t { color: var(--orange); }
+    .ba-metric { margin-bottom: 8px; }
+    .ba-metric-label { font-size: 0.78rem; color: var(--muted-2); }
+    .ba-metric-val { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; }
+    .ba-metric-val.good { color: #4ade80; }
+    .case-result {
+      background: linear-gradient(90deg, rgba(255,92,26,0.08), transparent);
+      border-left: 3px solid var(--orange);
+      padding: 14px 18px; border-radius: 0 8px 8px 0;
+      font-size: 0.88rem; line-height: 1.7;
+    }
+    .case-result strong { color: var(--white); }
+
+    /* ============================================================
+       BIG CTA
+    ============================================================ */
+    #big-cta {
+      background: var(--bg);
+      position: relative; overflow: hidden;
+    }
+    #big-cta::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(255,92,26,0.14) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .cta-inner {
+      text-align: center; position: relative; z-index: 1;
+    }
+    .cta-inner h2 { margin-bottom: 18px; max-width: 640px; margin-left: auto; margin-right: auto; }
+    .cta-inner p  { font-size: 1rem; margin-bottom: 38px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .cta-small { font-size: 0.82rem; color: var(--muted); margin-top: 18px; }
+    .cta-small a { color: var(--orange); text-decoration: underline; }
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    #contact { background: var(--bg-1); }
+    .contact-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 60px; align-items: start; }
+    .contact-left h2 { margin-bottom: 16px; }
+    .contact-left p  { margin-bottom: 32px; font-size: 1rem; }
+    .contact-info { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+    .contact-info-item {
+      display: flex; align-items: center; gap: 14px;
+      font-size: 0.9rem;
+    }
+    .contact-info-icon {
+      width: 38px; height: 38px; flex-shrink: 0;
+      background: var(--orange-dim); border: 1px solid rgba(255,92,26,0.2);
+      border-radius: 9px; display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .whatsapp-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #25d366; color: #fff;
+      padding: 14px 26px; border-radius: 8px;
+      font-family: var(--font-display); font-size: 0.9rem; font-weight: 600;
+      transition: all var(--transition);
+    }
+    .whatsapp-btn:hover {
+      background: #20bb5a;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(37,211,102,0.3);
+    }
+    .form-frame {
+      border-radius: var(--radius-lg); overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .form-frame-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-display); font-size: 0.82rem; font-weight: 600;
+      color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .form-frame iframe {
+      width: 100%; height: 620px;
+      border: none; display: block;
+      filter: invert(1) hue-rotate(180deg) brightness(0.92);
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0 28px;
+      position: relative; z-index: 1;
+    }
+    .footer-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 40px; flex-wrap: wrap; gap: 40px;
+    }
+    .footer-brand .logo-text {
+      font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .footer-brand .logo-text span { color: var(--orange); }
+    .footer-brand p { font-size: 0.85rem; margin-top: 10px; max-width: 260px; }
+    .footer-links-group { display: flex; gap: 60px; flex-wrap: wrap; }
+    .footer-col h5 {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li a { font-size: 0.88rem; color: var(--muted); transition: color 0.2s; }
+    .footer-col ul li a:hover { color: var(--orange); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 24px; border-top: 1px solid var(--border);
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { font-size: 0.8rem; color: var(--muted-2); margin: 0; }
+    .footer-bottom a { color: var(--orange); }
+
+    /* ============================================================
+       SCROLL ANIMATIONS
+    ============================================================ */
+    .fade-up {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-d1 { transition-delay: 0.1s; }
+    .fade-up-d2 { transition-delay: 0.2s; }
+    .fade-up-d3 { transition-delay: 0.3s; }
+    .fade-up-d4 { transition-delay: 0.4s; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1024px) {
+      .proof-grid { grid-template-columns: repeat(2, 1fr); }
+      .proof-item + .proof-item { border-left: none; }
+      .proof-item:nth-child(odd) + .proof-item { border-left: 1px solid var(--border); }
+      .proof-item:nth-child(3) { border-top: 1px solid var(--border); }
+      .proof-item:nth-child(4) { border-top: 1px solid var(--border); }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .process-steps { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .process-steps::before { display: none; }
+      .why-grid { grid-template-columns: 1fr; }
+      .cases-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card  { display: none; }
+      h1 { font-size: 2.4rem; }
+      h2 { font-size: 1.8rem; }
+      .nav-links, .nav-cta .btn-ghost { display: none; }
+      .hamburger { display: flex; }
+      .section { padding: 72px 0; }
+      .proof-grid { grid-template-columns: 1fr 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr; }
+      .before-after { grid-template-columns: 1fr; }
+      .hero-trust { flex-wrap: wrap; gap: 16px; }
+      .footer-top { flex-direction: column; }
+      .footer-links-group { gap: 32px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 0 16px; }
+      .proof-grid { grid-template-columns: 1fr; }
+      .proof-item + .proof-item { border-left: none; border-top: 1px solid var(--border); }
+      .proof-item:nth-child(odd) + .proof-item { border-left: none; }
+    }
+
+    /* ============================================================
+       MISC UTILITIES
+    ============================================================ */
+    .text-orange { color: var(--orange); }
+    .text-muted  { color: var(--muted); }
+    .divider {
+      height: 1px; background: var(--border);
+      position: relative; z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====================================================
+       NAVBAR
+  ===================================================== -->
+  <nav id="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">Scale<span>Forge</span></a>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#cases">Case Studies</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#contact" class="btn btn-ghost" style="padding:10px 20px;font-size:0.85rem;">Contact</a>
+        <a href="#contact" class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem;">
+          Free Audit
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="hamburger" id="hamburger" onclick="toggleMobile()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <span class="close-mobile" onclick="toggleMobile()">✕</span>
+    <a href="#services"  onclick="toggleMobile()">Services</a>
+    <a href="#process"   onclick="toggleMobile()">Process</a>
+    <a href="#cases"     onclick="toggleMobile()">Case Studies</a>
+    <a href="#contact"   onclick="toggleMobile()">Contact</a>
+    <a href="#contact" class="btn btn-primary btn-lg" onclick="toggleMobile()">Get Free Audit</a>
+  </div>
+
+  <!-- ====================================================
+       HERO
+  ===================================================== -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-eyebrow">India's Performance-First E-Commerce Partner</div>
+          <h1 class="hero-headline">
+            We Scale Brands.<br>
+            Not Just <em>Ad Accounts</em>.
+          </h1>
+          <p class="hero-sub">
+            Most agencies optimise for clicks. We engineer profitable revenue. From Amazon & Flipkart dominance to Shopify conversions — we own the full growth funnel.
+          </p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary btn-lg">
+              Get Free Growth Audit
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#cases" class="btn btn-ghost btn-lg">See Case Studies</a>
+          </div>
+          <div class="hero-trust">
+            <div class="hero-trust-item">
+              <span class="hero-trust-icon">✦</span>
+              <span>₹50L+ Revenue Managed</span>
+            </div>
+            <div class="hero-trust-item">
+              <span class="hero-trust-icon">✦</span>
+              <span>35+ Active Brand Partners</span>
+            </div>
+            <div class="hero-trust-item">
+              <span class="hero-trust-icon">✦</span>
+              <span>Avg 3.8× ROAS Delivered</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating performance card -->
+        <div class="hero-card fade-up fade-up-d2">
+          <div class="hc-header">📈 Live Brand Performance</div>
+
+          <div class="hc-metric">
+            <div class="hc-metric-label">Monthly Revenue Growth</div>
+            <div class="hc-bar-wrap">
+              <div class="hc-bar" style="width:82%"></div>
+            </div>
+            <div class="hc-metric-val">↑ 82% vs Last Quarter</div>
+          </div>
+
+          <div class="hc-metric">
+            <div class="hc-metric-label">ACOS Reduction</div>
+            <div class="hc-bar-wrap">
+              <div class="hc-bar" style="width:65%; animation-delay:0.3s"></div>
+            </div>
+            <div class="hc-metric-val">↓ 38% (32% → 19.8%)</div>
+          </div>
+
+          <div class="hc-metric">
+            <div class="hc-metric-label">Organic Rank Improvement</div>
+            <div class="hc-bar-wrap">
+              <div class="hc-bar" style="width:91%; animation-delay:0.5s"></div>
+            </div>
+            <div class="hc-metric-val">↑ Top 3 on 14 Keywords</div>
+          </div>
+
+          <div class="hc-divider"></div>
+
+          <div class="hc-big">
+            <div class="hc-big-num">₹12.4L</div>
+            <div class="hc-big-label">added MRR for a skincare brand<br>in 90 days</div>
+          </div>
+          <div class="hc-tag">✓ Real client result</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       MARQUEE
+  ===================================================== -->
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <div class="marquee-item"><span>◆</span> Amazon Ads Management</div>
+      <div class="marquee-item"><span>◆</span> Flipkart Growth</div>
+      <div class="marquee-item"><span>◆</span> Shopify CRO</div>
+      <div class="marquee-item"><span>◆</span> Meta & Google PPC</div>
+      <div class="marquee-item"><span>◆</span> FBA Optimization</div>
+      <div class="marquee-item"><span>◆</span> Catalog & SEO</div>
+      <div class="marquee-item"><span>◆</span> Quick Commerce</div>
+      <div class="marquee-item"><span>◆</span> Creative Studio</div>
+      <!-- Duplicate for seamless loop -->
+      <div class="marquee-item"><span>◆</span> Amazon Ads Management</div>
+      <div class="marquee-item"><span>◆</span> Flipkart Growth</div>
+      <div class="marquee-item"><span>◆</span> Shopify CRO</div>
+      <div class="marquee-item"><span>◆</span> Meta & Google PPC</div>
+      <div class="marquee-item"><span>◆</span> FBA Optimization</div>
+      <div class="marquee-item"><span>◆</span> Catalog & SEO</div>
+      <div class="marquee-item"><span>◆</span> Quick Commerce</div>
+      <div class="marquee-item"><span>◆</span> Creative Studio</div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       PROOF / STATS
+  ===================================================== -->
+  <section class="section" id="proof">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="label">Results That Speak</div>
+        <h2>Numbers built on<br>real brand performance</h2>
+        <p>We don't chase vanity metrics. Every number below represents profit moved, revenue unlocked, or cost eliminated for our brand partners.</p>
+      </div>
+
+      <div class="proof-grid">
+        <div class="proof-item fade-up fade-up-d1">
+          <div class="proof-num"><sup>₹</sup>50L<span class="proof-suffix">+</span></div>
+          <div class="proof-label">Total Revenue Managed Across Marketplaces & D2C</div>
+          <div class="proof-bar"></div>
+        </div>
+        <div class="proof-item fade-up fade-up-d2">
+          <div class="proof-num">3.8<span class="proof-suffix">×</span></div>
+          <div class="proof-label">Average ROAS Delivered on Amazon & Meta Ad Campaigns</div>
+          <div class="proof-bar"></div>
+        </div>
+        <div class="proof-item fade-up fade-up-d3">
+          <div class="proof-num">42<span class="proof-suffix">%</span></div>
+          <div class="proof-label">Average ACOS Reduction Within 60 Days of Onboarding</div>
+          <div class="proof-bar"></div>
+        </div>
+        <div class="proof-item fade-up fade-up-d4">
+          <div class="proof-num">35<span class="proof-suffix">+</span></div>
+          <div class="proof-label">Active Brand Partners Scaling Monthly With ScaleForge</div>
+          <div class="proof-bar"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ====================================================
+       SERVICES
+  ===================================================== -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="label">What We Do</div>
+        <h2>One partner.<br>Every growth lever covered.</h2>
+        <p>We embed inside your brand's growth engine — not as a vendor, but as a partner who's obsessed with your P&L as much as you are.</p>
+      </div>
+
+      <div class="services-grid">
+
+        <div class="service-card fade-up fade-up-d1">
+          <div class="service-icon">🛒</div>
+          <h3>Amazon & Flipkart Management</h3>
+          <p>Full-stack marketplace management — from account health and A+ content to ranking strategy and reviews. We treat your marketplace like your primary revenue engine.</p>
+          <span class="service-tag">→ Ranking · Revenue · Retention</span>
+        </div>
+
+        <div class="service-card fade-up fade-up-d2">
+          <div class="service-icon">🎯</div>
+          <h3>PPC & Performance Ads</h3>
+          <p>Amazon Sponsored Ads, Meta campaigns, Google Shopping — we run profit-first ads with granular bid management, negative targeting, and relentless ACOS optimisation.</p>
+          <span class="service-tag">→ ROAS · ACOS · Profitable Scale</span>
+        </div>
+
+        <div class="service-card fade-up fade-up-d3">
+          <div class="service-icon">📋</div>
+          <h3>Catalog & Listing Optimisation</h3>
+          <p>Your listing is your 24/7 salesperson. We craft SEO-rich titles, bullet points, and A+ content that converts browsers into buyers — algorithmically and emotionally.</p>
+          <span class="service-tag">→ CTR · CVR · Search Visibility</span>
+        </div>
+
+        <div class="service-card fade-up fade-up-d1">
+          <div class="service-icon">📦</div>
+          <h3>FBA & Inventory Management</h3>
+          <p>Avoid stockouts, overstock fees, and suppressed listings. We manage your FBA inventory flow, reorder triggers, and IPI scores so you never lose a sale to logistics.</p>
+          <span class="service-tag">→ IPI Score · Cash Flow · Availability</span>
+        </div>
+
+        <div class="service-card fade-up fade-up-d2">
+          <div class="service-icon">🛍️</div>
+          <h3>Shopify Management & CRO</h3>
+          <p>From theme optimisation and checkout flows to upsells and retention — we turn your Shopify store into a conversion machine, not just a digital catalogue.</p>
+          <span class="service-tag">→ CVR · AOV · LTV</span>
+        </div>
+
+        <div class="service-card fade-up fade-up-d3">
+          <div class="service-icon">🔍</div>
+          <h3>SEO / SMO / AEO</h3>
+          <p>Organic is the highest-margin traffic channel. We build your search presence across Google, Amazon, and AI answer engines — so you own your category long-term.</p>
+          <span class="service-tag">→ Organic Traffic · Brand Authority</span>
+        </div>
+
+        <div class="service-card fade-up fade-up-d1" style="grid-column: 1 / -1; max-width: 380px;">
+          <div class="service-icon">🎨</div>
+          <h3>Creative Services</h3>
+          <p>Scroll-stopping product photography, infographics, packaging mockups, and short-form video edits. Creatives designed to sell, not just look good.</p>
+          <span class="service-tag">→ Graphics · Video · Ad Creatives</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       PROCESS
+  ===================================================== -->
+  <section class="section" id="process">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="label">How We Work</div>
+        <h2>From zero clarity to<br>full-throttle growth.</h2>
+        <p>We move fast without cutting corners. Our 4-phase process is built to get you to profitability in 90 days — not 9 months.</p>
+      </div>
+
+      <div class="process-steps">
+        <div class="process-step fade-up fade-up-d1">
+          <div class="step-num">01</div>
+          <div class="step-title">Deep Audit</div>
+          <div class="step-desc">We dissect your account, listings, ad spend, competitors, and category data. No fluff — just a brutally honest picture of where revenue is leaking and where opportunity lives.</div>
+        </div>
+        <div class="process-step fade-up fade-up-d2">
+          <div class="step-num">02</div>
+          <div class="step-title">Growth Strategy</div>
+          <div class="step-desc">A custom 90-day playbook built around your margins, category, and growth goals. Channels, budgets, timelines, and KPIs — everything mapped before a rupee is spent.</div>
+        </div>
+        <div class="process-step fade-up fade-up-d3">
+          <div class="step-num">03</div>
+          <div class="step-title">Execution Sprint</div>
+          <div class="step-desc">We execute fast — listings go live, campaigns launch, creatives deploy. Weekly sprints, daily monitoring, and zero approval bottlenecks slow us down.</div>
+        </div>
+        <div class="process-step fade-up fade-up-d4">
+          <div class="step-num">04</div>
+          <div class="step-title">Scale & Compound</div>
+          <div class="step-desc">Once we find what works, we double down. Monthly growth reviews, reinvestment strategies, and new channel expansion — we build a moat around your brand.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       WHY US
+  ===================================================== -->
+  <section class="section" id="why">
+    <div class="container">
+      <div class="why-grid">
+        <div class="why-left fade-up">
+          <div class="label">Why ScaleForge</div>
+          <h2>We're not for every brand.<br>We're for the<br><span class="text-orange">serious ones.</span></h2>
+          <p>We cap our client roster intentionally. Every brand we take on gets a dedicated team, not a shared executive with 80 accounts. If you're building something real, we want to be the team behind it.</p>
+          <a href="#contact" class="btn btn-primary">
+            Check Availability
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="why-right">
+          <div class="why-item fade-up fade-up-d1">
+            <div class="why-icon">📊</div>
+            <div class="why-text">
+              <h4>Data Before Decisions</h4>
+              <p>Every strategy, every budget, every creative decision is backed by category data, competitor intel, and your historical performance — never gut feel.</p>
+            </div>
+          </div>
+          <div class="why-item fade-up fade-up-d2">
+            <div class="why-icon">💸</div>
+            <div class="why-text">
+              <h4>Profit Over Vanity</h4>
+              <p>We optimise for contribution margin, not just GMV. An ₹80L revenue month at 8% margin is a problem — we fix that before we scale it.</p>
+            </div>
+          </div>
+          <div class="why-item fade-up fade-up-d3">
+            <div class="why-icon">⚡</div>
+            <div class="why-text">
+              <h4>Speed That Compounds</h4>
+              <p>Marketplaces reward early movers. We move in days, not weeks. Fast indexing, same-day campaign pivots, and 48-hour creative turnaround.</p>
+            </div>
+          </div>
+          <div class="why-item fade-up fade-up-d4">
+            <div class="why-icon">🧠</div>
+            <div class="why-text">
+              <h4>Real Business Understanding</h4>
+              <p>We've built and sold products. We understand landed costs, working capital cycles, and why margin is everything. We think like founders.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ====================================================
+       CASE STUDIES
+  ===================================================== -->
+  <section class="section" id="cases">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="label">Case Studies</div>
+        <h2>Real brands.<br>Real numbers.<br>Real growth.</h2>
+        <p>We don't hide behind NDAs. Here's exactly what we did, and what happened to the P&L.</p>
+      </div>
+
+      <div class="cases-grid">
+
+        <!-- Case 1 -->
+        <div class="case-card fade-up fade-up-d1">
+          <div class="case-header">
+            <div>
+              <div class="case-brand">NourishRoot Organics</div>
+              <div class="case-cat">Nutrition & Wellness · Amazon India</div>
+            </div>
+            <div class="case-badge">90-Day Result</div>
+          </div>
+          <div class="case-body">
+            <div class="case-challenge">
+              A 3-year-old supplement brand stuck at ₹3.8L/month MRR. High ACOS (41%), poor listing CTR, and zero organic visibility on core keywords. The founder was spending more on ads every month with diminishing returns.
+            </div>
+            <div class="before-after">
+              <div class="ba-block">
+                <div class="ba-title">⚠ Before</div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Monthly Revenue</div>
+                  <div class="ba-metric-val">₹3.8L</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">ACOS</div>
+                  <div class="ba-metric-val">41.2%</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Organic Rank (P1 KW)</div>
+                  <div class="ba-metric-val">Page 5–6</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Listing CTR</div>
+                  <div class="ba-metric-val">0.38%</div>
+                </div>
+              </div>
+              <div class="ba-block after">
+                <div class="ba-title after-t">✓ After (90 Days)</div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Monthly Revenue</div>
+                  <div class="ba-metric-val good">₹10.2L</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">ACOS</div>
+                  <div class="ba-metric-val good">18.6%</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Organic Rank (P1 KW)</div>
+                  <div class="ba-metric-val good">Page 1 — #4</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Listing CTR</div>
+                  <div class="ba-metric-val good">1.82%</div>
+                </div>
+              </div>
+            </div>
+            <div class="case-result">
+              <strong>What we did:</strong> Full catalog rebuild with A+ content, keyword harvesting, negative targeting overhaul, and a strategic deals + voucher calendar that drove review velocity and rank acceleration.
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 2 -->
+        <div class="case-card fade-up fade-up-d2">
+          <div class="case-header">
+            <div>
+              <div class="case-brand">UrbanPour Co.</div>
+              <div class="case-cat">Home & Kitchen · Shopify + Amazon</div>
+            </div>
+            <div class="case-badge">6-Month Result</div>
+          </div>
+          <div class="case-body">
+            <div class="case-challenge">
+              A D2C kitchenware brand with great products but a broken growth stack. Shopify store converting at 0.9%, Meta ads bleeding cash at 8× CAC, and no Amazon presence despite a product-market fit.
+            </div>
+            <div class="before-after">
+              <div class="ba-block">
+                <div class="ba-title">⚠ Before</div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Shopify CVR</div>
+                  <div class="ba-metric-val">0.9%</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Meta ROAS</div>
+                  <div class="ba-metric-val">1.2×</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Amazon Revenue</div>
+                  <div class="ba-metric-val">₹0</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Blended CAC</div>
+                  <div class="ba-metric-val">₹1,840</div>
+                </div>
+              </div>
+              <div class="ba-block after">
+                <div class="ba-title after-t">✓ After (6 Months)</div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Shopify CVR</div>
+                  <div class="ba-metric-val good">2.8%</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Meta ROAS</div>
+                  <div class="ba-metric-val good">4.1×</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Amazon Revenue</div>
+                  <div class="ba-metric-val good">₹8.6L/mo</div>
+                </div>
+                <div class="ba-metric">
+                  <div class="ba-metric-label">Blended CAC</div>
+                  <div class="ba-metric-val good">₹540</div>
+                </div>
+              </div>
+            </div>
+            <div class="case-result">
+              <strong>What we did:</strong> Shopify UX/CRO audit and redesign, Meta creative refresh with UGC angles, Amazon seller account setup with aggressive launch strategy, and cross-channel attribution modelling to reallocate budget toward highest-LTV cohorts.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       BIG CTA
+  ===================================================== -->
+  <section class="section" id="big-cta">
+    <div class="container">
+      <div class="cta-inner fade-up">
+        <div class="label" style="margin: 0 auto 22px; display:table;">Limited Spots Available</div>
+        <h2>Ready to stop leaving<br>revenue on the table?</h2>
+        <p>Book a 30-minute Growth Audit call. We'll analyse your brand, identify the top 3 revenue leaks, and give you an actionable 90-day roadmap — free.</p>
+        <div class="cta-actions">
+          <a href="#contact" class="btn btn-primary btn-lg">
+            Book Your Free Audit Call
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="https://wa.me/919999999999?text=Hi%2C%20I%27d%20like%20a%20free%20growth%20audit%20for%20my%20brand." target="_blank" class="whatsapp-btn btn-lg" style="border-radius:10px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Chat on WhatsApp
+          </a>
+        </div>
+        <div class="cta-small">No commitment. No sales pitch. Just honest growth advice. <a href="#contact">Or fill the form below →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       CONTACT
+  ===================================================== -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-left fade-up">
+          <div class="label">Get In Touch</div>
+          <h2>Let's talk about<br>your growth.</h2>
+          <p>Fill the form or reach us directly. We respond to every serious inquiry within 4 business hours.</p>
+
+          <div class="contact-info">
+            <div class="contact-info-item">
+              <div class="contact-info-icon">📧</div>
+              <span>hello@scaleforge.in</span>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon">📞</div>
+              <span>+91 99999 99999</span>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon">📍</div>
+              <span>New Delhi, India · Remote-first team</span>
+            </div>
+          </div>
+
+          <a href="https://wa.me/919999999999?text=Hi%2C%20I%27d%20like%20to%20discuss%20e-commerce%20growth%20for%20my%20brand." target="_blank" class="whatsapp-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Message Us on WhatsApp
+          </a>
+        </div>
+
+        <div class="contact-right fade-up fade-up-d2">
+          <div class="form-frame">
+            <div class="form-frame-header">📋 Brand Audit Request Form</div>
+            <!-- Replace the src below with your actual Google Form embed URL -->
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSfPlaceholderFormIDHere/viewform?embedded=true"
+              loading="lazy"
+              title="Growth Audit Request Form">
+              Loading form…
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       FOOTER
+  ===================================================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo-text">Scale<span>Forge</span></div>
+          <p>India's performance-first e-commerce growth partner. We engineer revenue, not just campaigns.</p>
+        </div>
+        <div class="footer-links-group">
+          <div class="footer-col">
+            <h5>Services</h5>
+            <ul>
+              <li><a href="#services">Amazon Management</a></li>
+              <li><a href="#services">PPC & Ads</a></li>
+              <li><a href="#services">Shopify & CRO</a></li>
+              <li><a href="#services">FBA Management</a></li>
+              <li><a href="#services">SEO & SMO</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h5>Company</h5>
+            <ul>
+              <li><a href="#why">Why ScaleForge</a></li>
+              <li><a href="#process">Our Process</a></li>
+              <li><a href="#cases">Case Studies</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h5>Connect</h5>
+            <ul>
+              <li><a href="#">LinkedIn</a></li>
+              <li><a href="#">Instagram</a></li>
+              <li><a href="https://wa.me/919999999999" target="_blank">WhatsApp</a></li>
+              <li><a href="mailto:hello@scaleforge.in">Email Us</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 ScaleForge. All rights reserved.</p>
+        <p>Built for brands serious about <a href="#contact">profitable growth</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====================================================
+       JAVASCRIPT
+  ===================================================== -->
+  <script>
+    // Navbar scroll state
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Mobile nav
+    function toggleMobile() {
+      document.getElementById('mobileNav').classList.toggle('open');
+    }
+
+    // Scroll-triggered fade animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Animated counter for proof numbers
+    function animateCount(el, target, prefix, suffix, decimals) {
+      const duration = 1800;
+      const start = performance.now();
+      const update = (now) => {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 4);
+        const val = eased * target;
+        el.innerHTML = (prefix || '') +
+          (decimals ? val.toFixed(1) : Math.floor(val)) +
+          (suffix || '');
+        if (p < 1) requestAnimationFrame(update);
+      };
+      requestAnimationFrame(update);
+    }
+
+    const counterObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const data = el.dataset;
+          animateCount(el, +data.target, data.prefix, data.suffix, data.dec);
+          counterObs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    // Attach counter data to proof numbers dynamically
+    const proofNums = document.querySelectorAll('.proof-num');
+    const proofData = [
+      { target: 50, prefix: '<sup>₹</sup>', suffix: 'L<span class="proof-suffix">+</span>', dec: false },
+      { target: 3.8, prefix: '', suffix: '<span class="proof-suffix">×</span>', dec: true },
+      { target: 42, prefix: '', suffix: '<span class="proof-suffix">%</span>', dec: false },
+      { target: 35, prefix: '', suffix: '<span class="proof-suffix">+</span>', dec: false },
+    ];
+    proofNums.forEach((el, i) => {
+      if (proofData[i]) {
+        el.dataset.target  = proofData[i].target;
+        el.dataset.prefix  = proofData[i].prefix;
+        el.dataset.suffix  = proofData[i].suffix;
+        el.dataset.dec     = proofData[i].dec;
+        counterObs.observe(el);
+      }
+    });
+  </script>
+</body>
+</html>
